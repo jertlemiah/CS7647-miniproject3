@@ -1,0 +1,56 @@
+import spacy
+from spacy import displacy
+import json
+from SentenceReadingAgent import POS 
+
+
+nlp = spacy.load("en_core_web_sm")
+doc = nlp("Ada brought a short note to Irene.")
+
+# for token in doc:
+#     print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
+#             token.shape_, token.is_alpha, token.is_stop)
+    
+# Using readlines()
+file1 = open('mostcommon.txt', 'r')
+Lines = file1.readlines()
+
+dictionary = {}
+  
+count = 0
+# Strips the newline character
+for line in Lines:
+    count += 1
+    doc = nlp(line.strip())
+    token = doc[0]
+    element = {
+        # "lemma": token.lemma_,
+        # "pos": [POS[token.pos_]]
+        "text": token.text,
+        "pos": f"|POS.{token.pos_}|"
+    }
+    dictionary[token.text] = element
+    # print(f"Line{count}: text:{token.text}, lemma_:{token.lemma_}, pos_:{token.pos_}, is_stop:{token.is_stop }")
+
+print(dictionary)
+
+with open("preprocessing.json", "w") as outfile:
+    json.dump(dictionary, outfile, indent=4)
+
+
+# Using readlines()
+file1 = open('preprocessing.json', 'r')
+Lines = file1.readlines()
+newLines = []
+for line in Lines:
+    line = line.replace("\"|","[")
+    line = line.replace("|\"","]")
+    newLines.append(line)
+
+with open("PreprocessingDict.py", "w") as outfile:
+    outfile.writelines("#NOTE TO SELF: THIS IS A GENERATED CLASS, DO NOT EDIT JEREMIAH\n")
+    outfile.writelines("from POS import POS\n")
+    outfile.writelines("\nclass PreprocessingDict:")
+    outfile.writelines("\n\twordDict=")
+    outfile.writelines(newLines)
+    # json.dump(dictionary, outfile, indent=4)

@@ -19,10 +19,10 @@ def test():
     question_8 = "How do David and Lucy get to school?"
     question_9 = "At what time do David and Lucy walk to school?"
 
-    print(test_agent.solve(sentence_1, question_1))  # "Ada"
-    print(test_agent.solve(sentence_1, question_2))  # "note" or "a note"
-    print(test_agent.solve(sentence_1, question_3))  # "Irene"
-    print(test_agent.solve(sentence_1, question_4))  # "short"
+    # print(test_agent.solve(sentence_1, question_1))  # "Ada"
+    # print(test_agent.solve(sentence_1, question_2))  # "note" or "a note"
+    # print(test_agent.solve(sentence_1, question_3))  # "Irene"
+    # print(test_agent.solve(sentence_1, question_4))  # "short"
 
     print(test_agent.solve(sentence_2, question_5))  # "David"
     print(test_agent.solve(sentence_2, question_6))  # "school"
