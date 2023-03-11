@@ -1,6 +1,7 @@
 import spacy
 from spacy import displacy
 import json
+from POS import Word
 from SentenceReadingAgent import POS 
 
 
@@ -21,16 +22,63 @@ count = 0
 # Strips the newline character
 for line in Lines:
     count += 1
+    
     doc = nlp(line.strip())
     token = doc[0]
-    element = {
-        # "lemma": token.lemma_,
-        # "pos": [POS[token.pos_]]
-        "text": token.text,
-        "pos": f"|POS.{token.pos_}|"
-    }
-    dictionary[token.text] = element
-    # print(f"Line{count}: text:{token.text}, lemma_:{token.lemma_}, pos_:{token.pos_}, is_stop:{token.is_stop }")
+    text = token.text
+    line = line.lower()
+    line = line.replace("\n","")
+    pos = []
+    pos.append(token.pos_)
+    isStop = token.is_stop
+
+    #Override the original POS
+    match line:
+        case 'bobbie':
+            pos = ["PROPN"]
+        case 'irene':
+            pos = ["PROPN"]
+        case 'jose':
+            pos = ["PROPN"]
+        case 'meredith':
+            pos = ["PROPN"]
+        case 'yeeling':
+            pos = ["PROPN"]
+        case 'yan':
+            pos = ["PROPN"]
+
+        case 'cry':
+            pos = ["VERB"]   
+        case 'noun':
+            pos = ["NOUN"]   
+        case 'box':
+            pos = ["NOUN"]   
+        
+        case 'note':
+            pos = ["NOUN","VERB"]
+        case 'fly':
+            pos = ["NOUN","VERB"]
+
+        case 'mile':
+            pos = ["DIST", "NOUN"]
+        case 'inch':
+            pos = ["DIST", "NOUN"]
+        case 'feet':
+            pos = ["DIST", "NOUN"]
+        case 'foot':
+            pos = ["DIST", "NOUN"]
+
+        case 'was':
+            pos = ["VERB"]
+
+        case 'to':
+            pos = ["PART","ADP"]
+
+        case 'long':
+            pos = ["ADJ","ADV"]
+
+    posLine = f"|>{',|>'.join(pos)}"
+    dictionary[line] = f"|Word(text='{text}', lemma='{token.lemma_}', pos=[{posLine}], isStop={isStop})|"
 
 print(dictionary)
 
@@ -43,13 +91,15 @@ file1 = open('preprocessing.json', 'r')
 Lines = file1.readlines()
 newLines = []
 for line in Lines:
-    line = line.replace("\"|","[")
-    line = line.replace("|\"","]")
+    line = line.replace("\"|","")
+    line = line.replace("|\"","")
+    line = line.replace("|>","POS.")
     newLines.append(line)
 
 with open("PreprocessingDict.py", "w") as outfile:
     outfile.writelines("#NOTE TO SELF: THIS IS A GENERATED CLASS, DO NOT EDIT JEREMIAH\n")
     outfile.writelines("from POS import POS\n")
+    outfile.writelines("from POS import Word\n")
     outfile.writelines("\nclass PreprocessingDict:")
     outfile.writelines("\n\twordDict=")
     outfile.writelines(newLines)

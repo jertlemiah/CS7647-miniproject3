@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum
 
 
@@ -19,7 +20,28 @@ class POS(Enum):
     SYM = 14 #symbol
     VERB = 15 #verb
     X = 16 #other
+    TIME = 17
+    DIST = 18
 
+@dataclass
 class Word():
-    text: str
-    pos: POS
+    text: list[str]
+    lemma: str
+    pos: list[POS]
+    isStop: bool
+
+# @dataclass
+# class Time:Word():
+
+@dataclass
+class Sentence():
+    raw: str
+    modified: str
+    words: list[Word]
+    subject: list[str]
+    primaryVerb: Word
+    directObject: list[str]
+    indirectObject: list[str]
+    mentionsTime: bool
+    predicateNom: str
+    predicateAdj: str
