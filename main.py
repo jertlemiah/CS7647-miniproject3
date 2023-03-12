@@ -38,15 +38,15 @@ def test():
     # Who / whom questions
     # print(test_agent.solve(sentence_1, question_1))  # "Ada"
     # print(test_agent.solve(sentence_1, question_3))  # "Irene"
-    print(test_agent.solve(sentence_2, question_5))  # "David"
+    # print(test_agent.solve(sentence_2, question_5))  # "David"
     # print(test_agent.solve(sentence_4, question_4_2))  # "She"
     # print(test_agent.solve(sentence_7, question_7_1))  # her friend
 
     # What questions
-    # print(test_agent.solve(sentence_1, question_2))  # "note" or "a note"
-    # print(test_agent.solve(sentence_2, question_9))  # "8:00AM"
-    # print(test_agent.solve(sentence_4, question_4_1))  # a story
-    # print(test_agent.solve(sentence_5, question_5_1))  # the house
+    print(test_agent.solve(sentence_1, question_2))  # "note" or "a note"
+    print(test_agent.solve(sentence_2, question_9))  # "8:00AM"
+    print(test_agent.solve(sentence_4, question_4_1))  # a story
+    print(test_agent.solve(sentence_5, question_5_1))  # the house
 
     # When questions
 

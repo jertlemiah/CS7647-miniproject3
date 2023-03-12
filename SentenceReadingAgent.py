@@ -4,10 +4,10 @@ from POS import POS
 from POS import Word
 from POS import Sentence
 from POS import Phrase
-from POS import RELATIONSHIP
+from POS import RELATION
 from PreprocessingDict import PreprocessingDict
 from datetime import datetime
-# from typing import List
+from typing import List
 import re
 # import json
 
@@ -27,7 +27,7 @@ class SentenceReadingAgent:
         #Add your code here! Your solve method should receive
 		#two strings as input: sentence and question. It should
 		#return a string representing the answer to the question.
-        try:
+        # try:
             print(f"sentence: '{sentence}'")
             print(f"question: '{question}'")
             formattedSentence = self.parseSentence(sentenceRaw=sentence)
@@ -37,7 +37,7 @@ class SentenceReadingAgent:
                 if questionWord in question.lower():
                     i = [x for x in formattedQuestion.words if x.text == questionWord]
                     # secondaryWord = formattedQuestion.words[i+1]
-                    secondaryWord = formattedQuestion.primaryVerb
+                    secondaryWord = formattedQuestion.verbPhrase.text
                     # print(f"question word: {questionWord}, secondary word: {secondaryWord.text}")
                     break
         
@@ -63,21 +63,16 @@ class SentenceReadingAgent:
             elif questionWord == "how":
                 answer = self.Find_How(formattedSentence, formattedQuestion)
             return answer
-        except:
-            return None
+        # except:
+        #     return None
 
 
     def parseSentence(self, sentenceRaw):
         wordStrings = sentenceRaw.replace('.','').split()
-        # sentence = Sentence(None)
         words = []
-        # subjects = []
-        # verbs = []
         for string in wordStrings:
             try:
                 word = self.wordDict[string.lower()]
-                # if word["pos"][0] == POS.VERB:
-                #     verbs.append(string)
             except:
                 regexPattern = '\d:\d\d.*'
                 if re.search(regexPattern, string) != None:
@@ -96,145 +91,20 @@ class SentenceReadingAgent:
                     )
             word.text.replace("?","").replace(",","")
             words.append(word)
-            # if "VERB" in word["pos"]:
-            #     verbs.append(string)
-            # match word["pos"][0]:
-            #     case POS.NOUN:
-            #         subjects.append(word)
-            #         pass
-            #     case POS.PRON:
-            #         subjects.append(word)
-            #         pass
-            #     case POS.PROPN:
-            #         subjects.append(word)
-            #         pass
 
-            #     case POS.ADJ:
-            #         pass
-
-            #     case POS.VERB:
-            #         pass
-
-
-            #     case POS.ADP:
-            #         pass
-            #     case POS.ADV:
-            #         pass
-            #     case POS.CCONJ:
-            #         pass
-            #     case POS.DET:
-            #         pass
-            #     case POS.INTJ:
-            #         pass
-
-            #     case POS.NUM:
-            #         pass
-            #     case POS.PART:
-            #         pass
-
-            #     case POS.PUNCT:
-            #         pass
-            #     case POS.SCONJ:
-            #         pass
-            #     case POS.SYM:
-            #         pass
-
-            #     case _:#POS.X:
-            #         pass
-
-        modifiedSentence = ""
-        modifiedWords = []
-        for word in words:
-            temp = word.text
-            if not word.isStop: #any(x in word.posList for x in {POS.VERB, POS.ADJ, POS.ADV, POS.NOUN, POS.TIME, POS.PRON, POS.PROPN,}):
-
-                temp = f"{'/'.join(pos.name for pos in word.posList)}"
-                # temp = word.posList.name
-            modifiedWords.append(temp)
-        modifiedSentence = " ".join(modifiedWords)
-        # print(modifiedSentence)
-
-
-        # sentence.verb =
-        # for word in words:
-        #     if
-        verb = [word for word in words for pos in word.posList if pos.value == POS.VERB.value]
-        # parts = sentence.split(verbs[0])
-        # subject = parts[0]
-        # complement = parts[1]
-        # words = list(filter(lambda word: not word.isStop, words))
-        verbIndex = words.index(verb[0])
-        # subjects = list(filter(lambda word: any(pos.value in {POS.PRON.value, POS.PROPN.value, POS.NOUN.value} for pos in word.posList), words[:verbIndex]))
-        subjects = list(filter(lambda word: not word.isStop and IsWordAnyPos(word, {POS.PRON.value, POS.PROPN.value, POS.NOUN.value}), words[:verbIndex]))
-        # # subjects = list(filter(lambda word: any(pos in {POS.PRON, POS.PROPN} for pos in word.posList), words[:i]))
-        # indirectObjects = list(filter(lambda word: any(pos.value in {POS.PRON.value, POS.PROPN.value} for pos in word.posList), words[verbIndex:]))
-        # # complementList = words[i+1:]
-        # directObjects = list(filter(lambda word: any(pos.value in {POS.NOUN.value} for pos in word.posList), words[verbIndex:]))
-        # # two things:
-        
-        
-        indirectObjects = []
-        directObjects = []
-        prepFound = False
-        collectingIndirect = True
-        collectingDirect = False
-        objIndex = verbIndex
-        for i in range(verbIndex+1, len(words)):
-            word = words[i]
-            
-            # if any(pos.value in {POS.ADP.value} for pos in word.posList):
-            if IsWordAnyPos(word, {POS.ADP.value}):
-                if collectingDirect:
-                    break
-                else:
-                    prepFound = True
-                    continue
-
-            elif IsWordAnyPos(word, {POS.ADJ.value}):
-                continue
-
-            # elif not prepFound and collectingIndirect and any(pos.value in {POS.PRON.value, POS.PROPN.value, POS.NOUN.value} for pos in word.posList):
-            elif not prepFound and collectingIndirect and IsWordAnyPos(word, {POS.PRON.value, POS.PROPN.value, POS.NOUN.value}):
-                if not word.isStop:
-                    indirectObjects.append(word)
-
-            elif word.text == "and":
-                continue
-
-            elif collectingIndirect:
-                collectingIndirect = False
-                collectingDirect = True
-            
-            elif collectingDirect and any(pos.value in {POS.PRON.value, POS.PROPN.value, POS.NOUN.value} for pos in word.posList):
-                directObjects.append(word)
-                objIndex = i
-
-            else:
-                break    
-        
-
-        for i in range(objIndex+1, len(words)):
-            word = words[i]
-            if IsWordAnyPos(word, {POS.PROPN.value}) and IsWordAnyPos(words[i-1], {POS.ADP.value}) :
-                indirectObjects.append(word)
-            pass
-        
         phrases = []
-        wordsInPhrase = []
-        # for i in range(len(words)):
-        i = 0
-
         # Find the subject
+        i = 0
         wordsInPhrase = []
         for i in range(i, len(words)):
             word = words[i]
-            if not IsWordAnyPos(word, {POS.VERB.value, POS.ADV.value}):
+            if not IsWordAnyPos(word, {POS.VERB, POS.ADV}):
                 wordsInPhrase.append(word)
             else:
                 newPhrase = Phrase(
                     text = " ".join(word.text for word in wordsInPhrase),
                     words = wordsInPhrase,
-                    rel = RELATIONSHIP.SUBJECT
+                    relation = RELATION.SUBJECT
                 )
                 phrases.append(newPhrase)
                 break
@@ -243,139 +113,104 @@ class SentenceReadingAgent:
         wordsInPhrase = []
         for i in range(i, len(words)):
             word = words[i]
-            if IsWordAnyPos(word, {POS.VERB.value, POS.ADV.value}):
+            if IsWordAnyPos(word, {POS.VERB, POS.ADV}):
                 wordsInPhrase.append(word)
             else:
                 newPhrase = Phrase(
                     text = " ".join(word.text for word in wordsInPhrase),
                     words = wordsInPhrase,
-                    rel = RELATIONSHIP.VERB
+                    relation = RELATION.VERB
                 )
                 phrases.append(newPhrase)
                 break
         
         # Find the Indirect Object, if any
-        if IsWordAnyPos(word, {POS.PRON.value, POS.PROPN.value}): 
+        if IsWordAnyPos(word, {POS.PRON, POS.PROPN}): 
             wordsInPhrase = []
             for i in range(i, len(words)):
                 word = words[i]
-                if IsWordAnyPos(word, {POS.PRON.value, POS.PROPN.value, POS.NOUN.value}):
+                if IsWordAnyPos(word, {POS.PRON, POS.PROPN, POS.NOUN}):
                     wordsInPhrase.append(word)
                 else:
                     newPhrase = Phrase(
                         text = " ".join(word.text for word in wordsInPhrase),
                         words = wordsInPhrase,
-                        rel = RELATIONSHIP.INDIRECTOBJ
+                        relation = RELATION.INDIRECTOBJ
                     )
                     phrases.append(newPhrase)
                     break
                     
         # Find the Direct Object, if any
-        if not IsWordAnyPos(word, {POS.ADP.value}):
+        if not IsWordAnyPos(word, {POS.ADP}) and IsWordAnyPos(word, {POS.NOUN, POS.ADJ, POS.NUM}):
             wordsInPhrase = []
             for i in range(i, len(words)):
                 word = words[i]
-                if not IsWordAnyPos(word, {POS.ADP.value}):
+                if not IsWordAnyPos(word, {POS.ADP}):
                     wordsInPhrase.append(word)
                 else:
                     newPhrase = Phrase(
                         text = " ".join(word.text for word in wordsInPhrase),
                         words = wordsInPhrase,
-                        rel = RELATIONSHIP.DIRECTOBJ
+                        relation = RELATION.DIRECTOBJ
                     )
                     phrases.append(newPhrase)
                     break
 
         # Find all propositional & other phrases
+        
         while i < len(words):
-            wordsInPhrase = [word]
-            i = i + 1
-            needToBreak = False
+            wordsInPhrase = []
             for i in range(i, len(words)):
                 word = words[i]
-                if IsWordAnyPos(word, {POS.ADP.value, POS.SCONJ.value}) or word.text == "every":
-                    needToBreak = True
-                    
+                if len(wordsInPhrase) > 0 and (IsWordAnyPos(word, {POS.ADP, POS.SCONJ}) or word.text == "every"):
+                    i = i - 1
+                    break
                 else:
                     wordsInPhrase.append(word)
-                
-                if i+1 == len(words) or needToBreak:
-                    newPhrase = Phrase(
-                        text = " ".join(word.text for word in wordsInPhrase),
-                        words = wordsInPhrase,
-                        rel = RELATIONSHIP.DIRECTOBJ
-                    )
-                    phrases.append(newPhrase)
-                    break
-                #     i = i + 1
-                #     word = words[i]
-                #     if IsWordAnyPos(word, {POS.PRON.value, POS.PROPN.value, POS.NOUN.value}):
-                #         newPhrase = Phrase(
-                #             text = " ".join(word.text for word in wordsInPhrase),
-                #             words = wordsInPhrase,
-                #             rel = RELATIONSHIP.PREP
-                #         )
-                #         phrases.append(newPhrase)
-                #         break
-
-        
-        # while i < len(words):
-        #     word = words[i]
-
-        #     # everything before the adverb / verb is the subject
-        #     # if no preposition, then the first thing you encounter is the indirect object
-        #     # indirect objects are only placed directly after a verb and before a direct object
-            
-        #     if len(phrases) == 0: # Find Subject
-                
-                            
-        #     else: # Then it is 
-
-        #         i = i + 1
-                
-
-
-        #     pass
+            newPhrase = Phrase(
+                text = " ".join(word.text for word in wordsInPhrase),
+                words = wordsInPhrase,
+                relation = RELATION.PREP
+            )
+            phrases.append(newPhrase)
+            i = i + 1
 
         mentionsTime = "time" in sentenceRaw.lower()
 
         nonStopWords = list(filter(lambda word: not word.isStop, words))
 
         sentence = Sentence(
-            raw = sentenceRaw,
-            modified = modifiedSentence,
+            text = sentenceRaw,
             words = words,
+            phrases = phrases,
+            subjectPhrase = phrases[0],
+            verbPhrase = phrases[1],
             nonStopWords = nonStopWords,
-            subject = subjects,
-            primaryVerb = verb[0],
-            directObject = directObjects,
-            indirectObject = indirectObjects,
-            mentionsTime = mentionsTime,
-            predicateAdj = None,
-            predicateNom = None
-
+            mentionsTime = mentionsTime
         )
         return sentence
 
     def Find_Who(self, sentence:Sentence, question:Sentence):
-        # looking for a propernoun
-        # verb = [x for x in words if POS.VERB in x.pos]
-        # words = list(filter(lambda word: not word.isStop, words))
-        # i = words.index(verb[0])
-        # subjectPronouns = words[:i]
+        # looking for a propernoun, pronoun, or even noun when combined with a pronoun
+        if "with" in sentence.text:
+            containingPhrase = list(filter(lambda phrase: "with" in phrase.text, sentence.phrases))[0]
+            answer = containingPhrase.text.replace("with","").strip()
 
-        if question.words[-1].text == "with" or "with" in sentence.raw:
+            # for phrase in sentence.phrases
+        
+        elif question.words[-1].text == "with":
             names = []
-            propernounsInQuestion = list(filter(lambda word: any(pos.value in {POS.PROPN.value, POS.PRON.value, POS.NOUN.value} for pos in word.posList), question.words))
-            for person in sentence.subject:
-                if person not in propernounsInQuestion:
+            # propernounsInQuestion = list(filter(lambda word: any(pos.value in {POS.PROPN.value, POS.PRON.value, POS.NOUN.value} for pos in word.posList), question.words))
+            nounsInQuestion = GetWordsOfPos(question.words, {POS.PROPN, POS.PRON, POS.NOUN})
+            for person in sentence.subjectPhrase.words:
+                if IsWordAnyPos(person, {POS.PROPN, POS.PRON, POS.NOUN}) and person not in nounsInQuestion:
                     names.append(person.text)
             answer = " and ".join(names)
             # list(filter(lambda word: any(name in question.subject for name in sentence.subject), sentence.subject))[0]
-            # answer = any(name not in sentence.subject for name in question.subject).text
+            # answer = any(name not in sentence.subject for name in question.subject).text  
         else:
             names = []
-            for person in sentence.subject:
+            for person in sentence.subjectPhrase.words:
                 names.append(person.text)
             answer = " and ".join(names)
 
@@ -393,10 +228,31 @@ class SentenceReadingAgent:
         # subjectPronouns = words[:i]
         names = []
         # propernounsInQuestion = list(filter(lambda word: any(pos in {POS.PROPN} for pos in word.posList), question.words))
-        for person in sentence.indirectObject:
-            if any(pos.value in {POS.PROPN.value} for pos in person.posList):
-                names.append(person.text)
-        answer = " and ".join(names)
+        indirectObjectList = list(filter(lambda phrase: phrase.relation.value == RELATION.INDIRECTOBJ.value, sentence.phrases))
+        if len(indirectObjectList) > 0:
+            indirectObject:Phrase = indirectObjectList[0]
+            names = []
+            for person in indirectObject.words:
+                if IsWordAnyPos(person, {POS.PROPN, POS.PRON, POS.NOUN}):
+                    names.append(person.text)
+            answer = " and ".join(names)
+            return answer
+
+        # prepPhraseList = list(filter(lambda phrase: phrase.relation.value == RELATION.PREP.value and (IsWordAnyPos(word, {POS.PROPN, POS.PRON, POS.NOUN}) for word in phrase.words), sentence.phrases))
+        prepPhraseList = list(filter(lambda phrase: phrase.relation.value == RELATION.PREP.value and "to" in phrase.text, sentence.phrases))
+
+        if len(prepPhraseList) > 0:
+            prepPhrase:Phrase = prepPhraseList[0]
+            names = []
+            for person in prepPhrase.words:
+                if IsWordAnyPos(person, {POS.PROPN, POS.PRON, POS.NOUN}):
+                    names.append(person.text)
+            answer = " and ".join(names)
+            return answer
+        # for person in sentence.indirectObject:
+        #     if any(pos.value in {POS.PROPN.value} for pos in person.posList):
+        #         names.append(person.text)
+        # answer = " and ".join(names)
         # answer = " and ".join(sentence.indirectObject)
 
 
@@ -444,13 +300,13 @@ class SentenceReadingAgent:
     def Find_How(self, sentence:Sentence, question:Sentence):
         
         # if any(pos.value in {POS.ADJ.value} for pos in sentence.words[1].posList):
-        if IsWordAnyPos(question.words[1], {POS.ADJ.value}):
+        if IsWordAnyPos(question.words[1], {POS.ADJ}):
             obj = question.indirectObject[0]
 
         # if POS.ADJ in question.words[1].pos:
             # obj = question.directObject[0]
             i = sentence.words.index(obj)
-            if IsWordAnyPos(sentence.words[i-1], {POS.ADJ.value}):
+            if IsWordAnyPos(sentence.words[i-1], {POS.ADJ}):
                 return sentence.words[i-1].text
             else:
                 return None
@@ -473,8 +329,14 @@ class SentenceReadingAgent:
             pass
         pass
 
-def IsWordAnyPos(word: Word, lst:list ):
-    return any(pos.value in lst for pos in word.posList)
+def IsWordAnyPos(word: Word, posList:list ):
+    newList = []
+    for pos in posList:
+        newList.append(pos.value)
+    return any(pos.value in newList for pos in word.posList)
+
+def GetWordsOfPos(words: List[Word], lst:list ):
+    return list(filter(lambda word: IsWordAnyPos(word, lst), words))
 
 # @dataclass
 # class Noun():

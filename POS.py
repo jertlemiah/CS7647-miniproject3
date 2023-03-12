@@ -1,6 +1,7 @@
+from ast import List
 from dataclasses import dataclass
 from enum import Enum
-# from typing import List
+from typing import List
 
 class POS(Enum):
     ADJ = 0 #adjective
@@ -23,7 +24,7 @@ class POS(Enum):
     TIME = 17
     DIST = 18
 
-class RELATIONSHIP(Enum):
+class RELATION(Enum):
     SUBJECT = 0
     VERB = 1 #adposition
     DIRECTOBJ = 2
@@ -36,14 +37,14 @@ class RELATIONSHIP(Enum):
 class Phrase():
     text: str
     words: list
-    rel: RELATIONSHIP
+    relation: RELATION
 
 
 @dataclass
 class Word():
-    text: str#List[str]
+    text: str
     lemma: str
-    posList: list#List[POS]
+    posList: List[POS]
     isStop: bool
 
 # @dataclass
@@ -51,14 +52,10 @@ class Word():
 
 @dataclass
 class Sentence():
-    raw: str
-    modified: str
-    words: list#List[Word]
-    nonStopWords: list
-    subject: list#List[str]
-    primaryVerb: Word
-    directObject: list#List[str]
-    indirectObject: list#List[str]
+    text: str
+    words: List[Word]
+    phrases: List[Phrase]
+    subjectPhrase: Phrase
+    verbPhrase: Phrase
+    nonStopWords: List[Word]
     mentionsTime: bool
-    predicateNom: str
-    predicateAdj: str
