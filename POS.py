@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-
+# from typing import List
 
 class POS(Enum):
     ADJ = 0 #adjective
@@ -25,9 +25,9 @@ class POS(Enum):
 
 @dataclass
 class Word():
-    text: list[str]
+    text: str#List[str]
     lemma: str
-    pos: list[POS]
+    posList: list#List[POS]
     isStop: bool
 
 # @dataclass
@@ -37,11 +37,11 @@ class Word():
 class Sentence():
     raw: str
     modified: str
-    words: list[Word]
-    subject: list[str]
+    words: list#List[Word]
+    subject: list#List[str]
     primaryVerb: Word
-    directObject: list[str]
-    indirectObject: list[str]
+    directObject: list#List[str]
+    indirectObject: list#List[str]
     mentionsTime: bool
     predicateNom: str
     predicateAdj: str
