@@ -79,6 +79,9 @@ for line in Lines:
     elif line == 'a':
         posList = ["X"]
 
+    elif line == 'every':
+        posList = ["ADJ"]
+
     posLine = f"|>{',|>'.join(posList)}"
     dictionary[line] = f"|Word(text='{text}', lemma='{token.lemma_}', posList=[{posLine}], isStop={isStop})|"
 

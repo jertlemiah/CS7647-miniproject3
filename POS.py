@@ -23,6 +23,22 @@ class POS(Enum):
     TIME = 17
     DIST = 18
 
+class RELATIONSHIP(Enum):
+    SUBJECT = 0
+    VERB = 1 #adposition
+    DIRECTOBJ = 2
+    INDIRECTOBJ = 3
+    PREP = 4
+    DIST = 5
+    TIME = 6
+
+@dataclass
+class Phrase():
+    text: str
+    words: list
+    rel: RELATIONSHIP
+
+
 @dataclass
 class Word():
     text: str#List[str]
@@ -38,6 +54,7 @@ class Sentence():
     raw: str
     modified: str
     words: list#List[Word]
+    nonStopWords: list
     subject: list#List[str]
     primaryVerb: Word
     directObject: list#List[str]
