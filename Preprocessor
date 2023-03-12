@@ -77,7 +77,12 @@ for line in Lines:
         posList = ["ADJ","ADV"]
 
     elif line == 'a':
-        posList = ["X"]
+        posList = ["ART"]
+    elif line == 'an':
+        posList = ["ART"]
+    elif line == 'the':
+        posList = ["ART"]
+
 
     elif line == 'every':
         posList = ["ADJ"]

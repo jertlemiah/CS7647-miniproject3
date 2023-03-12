@@ -132,29 +132,35 @@ class SentenceReadingAgent:
                 if IsWordAnyPos(word, {POS.PRON, POS.PROPN, POS.NOUN}):
                     wordsInPhrase.append(word)
                 else:
-                    newPhrase = Phrase(
-                        text = " ".join(word.text for word in wordsInPhrase),
-                        words = wordsInPhrase,
-                        relation = RELATION.INDIRECTOBJ
-                    )
-                    phrases.append(newPhrase)
+                    i = i - 1
                     break
+            if len(wordsInPhrase) > 0:
+                newPhrase = Phrase(
+                    text = " ".join(word.text for word in wordsInPhrase),
+                    words = wordsInPhrase,
+                    relation = RELATION.INDIRECTOBJ
+                )
+                phrases.append(newPhrase)
+                i = i + 1
                     
         # Find the Direct Object, if any
-        if not IsWordAnyPos(word, {POS.ADP}) and IsWordAnyPos(word, {POS.NOUN, POS.ADJ, POS.NUM}):
+        if not IsWordAnyPos(word, {POS.ADP}) and IsWordAnyPos(word, {POS.NOUN, POS.ADJ, POS.NUM, POS.ART}):
             wordsInPhrase = []
             for i in range(i, len(words)):
                 word = words[i]
                 if not IsWordAnyPos(word, {POS.ADP}):
                     wordsInPhrase.append(word)
                 else:
-                    newPhrase = Phrase(
-                        text = " ".join(word.text for word in wordsInPhrase),
-                        words = wordsInPhrase,
-                        relation = RELATION.DIRECTOBJ
-                    )
-                    phrases.append(newPhrase)
+                    i = i - 1
                     break
+            if len(wordsInPhrase) > 0:
+                newPhrase = Phrase(
+                    text = " ".join(word.text for word in wordsInPhrase),
+                    words = wordsInPhrase,
+                    relation = RELATION.DIRECTOBJ
+                )
+                phrases.append(newPhrase)
+                i = i + 1
 
         # Find all propositional & other phrases
         
@@ -195,39 +201,24 @@ class SentenceReadingAgent:
         if "with" in sentence.text:
             containingPhrase = list(filter(lambda phrase: "with" in phrase.text, sentence.phrases))[0]
             answer = containingPhrase.text.replace("with","").strip()
-
-            # for phrase in sentence.phrases
-        
         elif question.words[-1].text == "with":
             names = []
-            # propernounsInQuestion = list(filter(lambda word: any(pos.value in {POS.PROPN.value, POS.PRON.value, POS.NOUN.value} for pos in word.posList), question.words))
             nounsInQuestion = GetWordsOfPos(question.words, {POS.PROPN, POS.PRON, POS.NOUN})
             for person in sentence.subjectPhrase.words:
                 if IsWordAnyPos(person, {POS.PROPN, POS.PRON, POS.NOUN}) and person not in nounsInQuestion:
                     names.append(person.text)
-            answer = " and ".join(names)
-            # list(filter(lambda word: any(name in question.subject for name in sentence.subject), sentence.subject))[0]
-            # answer = any(name not in sentence.subject for name in question.subject).text  
+            answer = " and ".join(names) 
         else:
             names = []
             for person in sentence.subjectPhrase.words:
-                names.append(person.text)
+                if IsWordAnyPos(person, {POS.PROPN, POS.PRON, POS.NOUN}):
+                    names.append(person.text)
             answer = " and ".join(names)
-
 
         return answer
 
     def Find_Whom(self, sentence:Sentence, question:Sentence):
-        # if sentence ends with ADP, then it's a Whom
-
-        # looking for a propernoun
-
-        # verb = [x for x in words if POS.VERB in x.pos]
-        # words = list(filter(lambda word: not word.isStop, words))
-        # i = words.index(verb[0])
-        # subjectPronouns = words[:i]
         names = []
-        # propernounsInQuestion = list(filter(lambda word: any(pos in {POS.PROPN} for pos in word.posList), question.words))
         indirectObjectList = list(filter(lambda phrase: phrase.relation.value == RELATION.INDIRECTOBJ.value, sentence.phrases))
         if len(indirectObjectList) > 0:
             indirectObject:Phrase = indirectObjectList[0]
@@ -238,7 +229,6 @@ class SentenceReadingAgent:
             answer = " and ".join(names)
             return answer
 
-        # prepPhraseList = list(filter(lambda phrase: phrase.relation.value == RELATION.PREP.value and (IsWordAnyPos(word, {POS.PROPN, POS.PRON, POS.NOUN}) for word in phrase.words), sentence.phrases))
         prepPhraseList = list(filter(lambda phrase: phrase.relation.value == RELATION.PREP.value and "to" in phrase.text, sentence.phrases))
 
         if len(prepPhraseList) > 0:
@@ -249,18 +239,19 @@ class SentenceReadingAgent:
                     names.append(person.text)
             answer = " and ".join(names)
             return answer
-        # for person in sentence.indirectObject:
-        #     if any(pos.value in {POS.PROPN.value} for pos in person.posList):
-        #         names.append(person.text)
-        # answer = " and ".join(names)
-        # answer = " and ".join(sentence.indirectObject)
-
-
         return answer
 
     def Find_What(self, sentence:Sentence, question:Sentence):
-        if question.words[1].text == "did":
-            return sentence.directObject[0].text
+        phraseList = list(filter(lambda phrase: phrase.relation.value == RELATION.DIRECTOBJ.value, sentence.phrases))
+        if question.words[1].text == "did" and len(phraseList) > 0:
+            prepPhrase:Phrase = phraseList[0]
+            whats = []
+            for person in prepPhrase.words:
+                if IsWordAnyPos(person, {POS.PROPN, POS.PRON, POS.NOUN}):
+                    whats.append(person.text)
+            answer = " and ".join(whats)
+            return answer
+            # return sentence.directObject[0].text
         else:
             return self.Find_Who(sentence, question)
         pass
@@ -301,15 +292,12 @@ class SentenceReadingAgent:
         
         # if any(pos.value in {POS.ADJ.value} for pos in sentence.words[1].posList):
         if IsWordAnyPos(question.words[1], {POS.ADJ}):
-            obj = question.indirectObject[0]
-
-        # if POS.ADJ in question.words[1].pos:
-            # obj = question.directObject[0]
-            i = sentence.words.index(obj)
-            if IsWordAnyPos(sentence.words[i-1], {POS.ADJ}):
-                return sentence.words[i-1].text
-            else:
-                return None
+            # locate noun associated with adjective
+            nounInQuestion = list(filter(lambda word: IsWordAnyPos(word, {POS.PROPN, POS.PRON, POS.NOUN}), question.words))
+            phraseList = list(filter(lambda phrase: nounInQuestion[0].text in phrase.text, sentence.phrases))
+            if len(phraseList) > 0:
+                adjectives = GetWordsOfPos(phraseList[0].words, {POS.ADJ})
+                return adjectives[0].text
         elif question.words[1].text == "far" or question.words[1].text == "long":
             # dist = [word for word in sentence.words if POS.DIST in word.posList][0]
             dist = [word for word in sentence.words for pos in word.posList if pos.value == POS.DIST.value][0]
@@ -325,7 +313,9 @@ class SentenceReadingAgent:
             # need to figure out how to differentiate between time and distance
             pass
         elif question.words[1].text in {"does","do"}:
-            return sentence.primaryVerb.text
+            phrase = list(filter(lambda phrase: phrase.relation == RELATION.VERB, sentence.phrases))[0]
+            primaryVerb = list(filter(lambda word: IsWordAnyPos(word, {POS.VERB}), phrase.words))[0]
+            return primaryVerb.text
             pass
         pass
 

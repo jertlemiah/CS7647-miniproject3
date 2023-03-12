@@ -43,10 +43,10 @@ def test():
     # print(test_agent.solve(sentence_7, question_7_1))  # her friend
 
     # What questions
-    print(test_agent.solve(sentence_1, question_2))  # "note" or "a note"
-    print(test_agent.solve(sentence_2, question_9))  # "8:00AM"
-    print(test_agent.solve(sentence_4, question_4_1))  # a story
-    print(test_agent.solve(sentence_5, question_5_1))  # the house
+    # print(test_agent.solve(sentence_1, question_2))  # "note" or "a note"
+    # print(test_agent.solve(sentence_2, question_9))  # "8:00AM"
+    # print(test_agent.solve(sentence_4, question_4_1))  # a story
+    # print(test_agent.solve(sentence_5, question_5_1))  # the house
 
     # When questions
 
@@ -56,9 +56,9 @@ def test():
     # print(test_agent.solve(sentence_2, question_8))  # "walk"
 
     # Where questions
-    # print(test_agent.solve(sentence_2, question_6))  # "school"
-    # print(test_agent.solve(sentence_3, question_10))  # "farm"
-    # print(test_agent.solve(sentence_6, question_6_1))  # "island"
+    print(test_agent.solve(sentence_2, question_6))  # "school"
+    print(test_agent.solve(sentence_3, question_10))  # "farm"
+    print(test_agent.solve(sentence_6, question_6_1))  # "island"
     
 
 if __name__ == "__main__":

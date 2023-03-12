@@ -23,6 +23,7 @@ class POS(Enum):
     X = 16 #other
     TIME = 17
     DIST = 18
+    ART = 19
 
 class RELATION(Enum):
     SUBJECT = 0
