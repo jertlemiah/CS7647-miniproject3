@@ -24,6 +24,7 @@ class POS(Enum):
     TIME = 17
     DIST = 18
     ART = 19
+    DEMON = 20
 
 class RELATION(Enum):
     SUBJECT = 0
@@ -56,7 +57,11 @@ class Sentence():
     text: str
     words: List[Word]
     phrases: List[Phrase]
+
     subjectPhrase: Phrase
     verbPhrase: Phrase
+    directObjPhrase: Phrase
+    indirectObjPhrase: Phrase
+
     nonStopWords: List[Word]
     mentionsTime: bool
