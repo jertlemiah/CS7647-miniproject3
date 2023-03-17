@@ -68,43 +68,43 @@ def test():
     sentence_17 = "Their children are in school."
     question_17_1 = "Who is in school?"
 
-    # # Who / whom questions
-    # print(test_agent.solve(sentence_1, question_1))  # "Ada"
-    # print(test_agent.solve(sentence_1, question_3))  # "Irene"
-    # print(test_agent.solve(sentence_2, question_5))  # "David"
-    # print(test_agent.solve(sentence_4, question_4_2))  # "She"
-    # print(test_agent.solve(sentence_4, question_4_3))  # "her friend"
-    # print(test_agent.solve(sentence_7, question_7_1))  # her friend
-    # print(test_agent.solve(sentence_11, question_11_2))  # Serena
-    # print(test_agent.solve(sentence_17, question_17_1))  # their children
+    # Who / whom questions
+    print(test_agent.solve(sentence_1, question_1))  # "Ada"
+    print(test_agent.solve(sentence_1, question_3))  # "Irene"
+    print(test_agent.solve(sentence_2, question_5))  # "David"
+    print(test_agent.solve(sentence_4, question_4_2))  # "She"
+    print(test_agent.solve(sentence_4, question_4_3))  # "her friend"
+    print(test_agent.solve(sentence_7, question_7_1))  # her friend
+    print(test_agent.solve(sentence_11, question_11_2))  # Serena
+    print(test_agent.solve(sentence_17, question_17_1))  # their children
 
-    # # What questions
-    # print(test_agent.solve(sentence_1, question_2))  # "note" or "a note"
-    # print(test_agent.solve(sentence_2, question_9))  # "8:00AM"
-    # print(test_agent.solve(sentence_4, question_4_1))  # a story
-    # print(test_agent.solve(sentence_5, question_5_1))  # the house
-    # print(test_agent.solve(sentence_8, question_8_1))  # a play
-    # print(test_agent.solve(sentence_9, question_9_1))  # the water
-    # print(test_agent.solve(sentence_10, question_10_1))  # play
-    # print(test_agent.solve(sentence_12, question_12_1))  # the dog
+    # What questions
+    print(test_agent.solve(sentence_1, question_2))  # "note" or "a note"
+    print(test_agent.solve(sentence_2, question_9))  # "8:00AM"
+    print(test_agent.solve(sentence_4, question_4_1))  # a story
+    print(test_agent.solve(sentence_5, question_5_1))  # the house
+    print(test_agent.solve(sentence_8, question_8_1))  # a play
+    print(test_agent.solve(sentence_9, question_9_1))  # the water
+    print(test_agent.solve(sentence_10, question_10_1))  # play
+    print(test_agent.solve(sentence_12, question_12_1))  # the dog
     print(test_agent.solve(sentence_15, question_15_1))  # money
     print(test_agent.solve(sentence_16, question_16_1))  # the sound of rain
     print(test_agent.solve(sentence_11, question_11_3))  # the rock
 
 
-    # # When questions
+    # When questions
     print(test_agent.solve(sentence_14, question_14_1))  # this morning
 
-    # # How questions
-    # print(test_agent.solve(sentence_1, question_4))  # "short"
-    # print(test_agent.solve(sentence_2, question_7))  # "mile"
-    # print(test_agent.solve(sentence_2, question_8))  # "walk"
+    # How questions
+    print(test_agent.solve(sentence_1, question_4))  # "short"
+    print(test_agent.solve(sentence_2, question_7))  # "mile"
+    print(test_agent.solve(sentence_2, question_8))  # "walk"
 
     # # Where questions
-    # print(test_agent.solve(sentence_2, question_6))  # "school"
-    # print(test_agent.solve(sentence_3, question_10))  # "farm"
-    # print(test_agent.solve(sentence_6, question_6_1))  # "island"
-    # print(test_agent.solve(sentence_11, question_11_1))  # "island"
+    print(test_agent.solve(sentence_2, question_6))  # "school"
+    print(test_agent.solve(sentence_3, question_10))  # "farm"
+    print(test_agent.solve(sentence_6, question_6_1))  # "island"
+    print(test_agent.solve(sentence_11, question_11_1))  # "island"
     
 
 if __name__ == "__main__":

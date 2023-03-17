@@ -106,7 +106,7 @@ class PreprocessingDict:
     "come": Word(text='come', lemma='come', posList=[POS.VERB], isStop=False),
     "did": Word(text='did', lemma='do', posList=[POS.VERB], isStop=True),
     "my": Word(text='my', lemma='my', posList=[POS.PRON], isStop=True),
-    "sound": Word(text='sound', lemma='sound', posList=[POS.VERB], isStop=False),
+    "sound": Word(text='sound', lemma='sound', posList=[POS.VERB, POS.NOUN], isStop=False),
     "no": Word(text='no', lemma='no', posList=[POS.INTJ], isStop=True),
     "most": Word(text='most', lemma='most', posList=[POS.ADV], isStop=True),
     "number": Word(text='number', lemma='number', posList=[POS.NOUN], isStop=False),
